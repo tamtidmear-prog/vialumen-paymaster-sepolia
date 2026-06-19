@@ -1,0 +1,8 @@
+{
+  "name": "vialumen-paymaster-sepolia",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ViaLumen — ERC-4337 Paymaster lab on Sepolia testnet (ghcr image)",
+  "scripts": { "start": "node src/paymaster-lab.mjs", "check": "node src/paymaster-lab.mjs" },
+  "dependencies": { "viem": "^2.21.0" }
+}
