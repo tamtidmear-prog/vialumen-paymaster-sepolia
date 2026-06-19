@@ -1,0 +1,28 @@
+# ARRA Oracle Chain 20260619 — node + explorer (run where docker is available)
+# friends: `docker compose up` → geth syncs from BOOTNODE; Otterscan at :5100
+services:
+  geth:
+    image: ethereum/client-go:stable
+    container_name: arra-geth
+    command: >
+      --datadir /data --networkid 20260619
+      --http --http.addr 0.0.0.0 --http.api eth,net,web3,debug,txpool
+      --http.vhosts=* --http.corsdomain=*
+      --port 30303 --syncmode full
+      ${BOOTNODE:+--bootnodes ${BOOTNODE}}
+    ports: ["8545:8545", "30303:30303", "30303:30303/udp"]
+    volumes: ["./genesis.json:/genesis.json:ro", "geth-data:/data"]
+    entrypoint: >
+      sh -c "[ -d /data/geth ] || geth init --datadir /data /genesis.json; exec geth $$@" --
+    restart: unless-stopped
+  # Otterscan explorer (full trace features need an ots_-capable node e.g. erigon;
+  # swap geth->erigontech/erigon for complete Otterscan support).
+  otterscan:
+    image: otterscan/otterscan:latest
+    container_name: arra-otterscan
+    environment: ["ERIGON_URL=http://localhost:8545"]
+    ports: ["5100:80"]
+    depends_on: [geth]
+    restart: unless-stopped
+volumes:
+  geth-data:
