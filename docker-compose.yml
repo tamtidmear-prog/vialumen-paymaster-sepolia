@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: nginx:alpine
+    container_name: vialumen-paymaster-fe
+    ports:
+      - "${FE_PORT:-8619}:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    restart: unless-stopped

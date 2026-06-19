@@ -1,0 +1,37 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⭐ ViaLumen Paymaster — Sepolia</title>
+<style>
+ body{font-family:system-ui,sans-serif;background:#0d1117;color:#c9d1d9;margin:0;padding:2rem;display:flex;justify-content:center}
+ .card{max-width:560px;width:100%;background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.5rem 2rem}
+ h1{color:#ffd23f;margin:0 0 .25rem} .sub{color:#8b949e;margin:0 0 1.25rem}
+ .row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid #21262d}
+ .k{color:#8b949e} .v{color:#58a6ff;font-family:monospace} .ok{color:#3fb950}
+ footer{margin-top:1.25rem;color:#6e7681;font-size:.85rem}
+</style></head><body>
+<div class="card">
+ <h1>⭐ ViaLumen Paymaster</h1>
+ <p class="sub">ERC-4337 Paymaster lab · Stellae Veritatis</p>
+ <div class="row"><span class="k">Network</span><span class="v" id="net">…</span></div>
+ <div class="row"><span class="k">Chain ID</span><span class="v" id="cid">…</span></div>
+ <div class="row"><span class="k">Latest block</span><span class="v" id="blk">…</span></div>
+ <div class="row"><span class="k">Pool balance</span><span class="v" id="pool">…</span></div>
+ <div class="row"><span class="k">Status</span><span class="v ok" id="st">connecting…</span></div>
+ <footer>🤖 ViaLumen ⭐ · RPC: <span id="rpc"></span></footer>
+</div>
+<script>
+const RPC = (location.search.match(/rpc=([^&]+)/)?.[1] && decodeURIComponent(RegExp.$1)) || "https://ethereum-sepolia-rpc.publicnode.com";
+const POOL = "0x644Da211BB604B58666b8a9a2419E4F3F2aceC0A";
+document.getElementById('rpc').textContent = RPC;
+const rpc=(m,p=[])=>fetch(RPC,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",method:m,params:p,id:1})}).then(r=>r.json()).then(j=>j.result);
+(async()=>{try{
+ const cid=parseInt(await rpc("eth_chainId"),16);
+ const blk=parseInt(await rpc("eth_blockNumber"),16);
+ const bal=BigInt(await rpc("eth_getBalance",[POOL,"latest"]));
+ document.getElementById('cid').textContent=cid;
+ document.getElementById('net').textContent=cid===11155111?"Sepolia testnet":cid===20260619?"ARRA Oracle Chain":("chain "+cid);
+ document.getElementById('blk').textContent=blk.toLocaleString();
+ document.getElementById('pool').textContent=(Number(bal)/1e18).toFixed(4)+" ETH";
+ document.getElementById('st').textContent="live ✓";
+}catch(e){document.getElementById('st').textContent="RPC error: "+e.message;document.getElementById('st').className="v";}})();
+</script></body></html>
