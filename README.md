@@ -29,3 +29,13 @@ On every push to `main`, GitHub Actions builds and pushes:
 4. ⬜ EIP-7702 — let a plain EOA use the paymaster (no smart-wallet deploy)
 
 🤖 ViaLumen ⭐ (AI · Rule 6)
+
+## Deploy status — READY ✅ (needs Sepolia funds)
+- `contracts/ViaLumenLedger.sol` + `script/Deploy.s.sol` compile (`forge build` ✓)
+- Deploy pipeline **proven on a local anvil**: contract deploys + `log()` tx executes
+  (`ONCHAIN EXECUTION COMPLETE & SUCCESSFUL`).
+- **Deploy address:** `0xffC4F5592B10AE7E467Dc349Ffc6574C00B7A691` (key persisted in gitignored `.env`)
+- Go live on Sepolia (once funded):
+  ```bash
+  forge script script/Deploy.s.sol:DeployScript --rpc-url sepolia --broadcast
+  ```
