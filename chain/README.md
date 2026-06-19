@@ -36,3 +36,10 @@ anvil is fine for the chain itself + local sync; only the Otterscan UI needs eri
 ## Local sync (verified ✓)
 `./sync-local.sh` — SSH-tunnels the server chain to localhost (firewall-safe).
 Verified: `chain-id 20260619`, blocks advancing (28→30, block-time 2s).
+
+## ✅ Working geth Clique node (no funds needed) — `run-geth-clique.sh`
+Verified: chainId **20260619**, blocks sealing (3→5, period 3s), enode produced.
+**Hard-won lessons** (save these):
+- **geth 1.14+ DROPPED Clique/PoW** → `Fatal: only PoS networks are supported`. Use **geth 1.13.x** for PoA.
+- Shared host → set a **unique `--authrpc.port`** (default 8551 collides → `address already in use`).
+- `--unlock` needs the keystore inside the run datadir (`<datadir>/keystore/`).
